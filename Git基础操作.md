@@ -9,3 +9,8 @@
 9. 把文件提交到仓库`git commit -m '说明'`
 10. 提交远程仓库`git push origin master`
 
+
+
+修改目标用户名和邮箱
+
+`git config user.name yourName`<br/>`git config user.email yourEmail`
