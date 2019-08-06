@@ -33,3 +33,11 @@
 
 
 
+# 415
+
+`Unsupported Media Type`服务器无法处理请求附带的媒体格式
+
+原因：和HTTP请求中的`Content-Type`有关，当没有写`Content-Type`或者`Content-Type`和服务器端期待的类型不同时，服务器端会返回415错误
+
+![1565076764120](C:\Users\13997\AppData\Roaming\Typora\typora-user-images\1565076764120.png)
+
