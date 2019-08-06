@@ -14,3 +14,8 @@
 修改目标用户名和邮箱
 
 `git config user.name yourName`<br/>`git config user.email yourEmail`
+
+修改全局用户名和邮箱
+
+`git config --global user.name yourName`<br/>`git config --global user.email yourEmail`
+
