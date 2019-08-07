@@ -592,3 +592,20 @@ SQL Scalar 函数基于输入值，返回一个单一的值。
 - ROUND() - 对某个数值字段进行指定小数位数的四舍五入
 - NOW() - 返回当前的系统日期和时间
 - FORMAT() - 格式化某个字段的显示方式
+
+# SQL分页查询
+
+```SQL
+SELECT Columns 
+FROM Table_Name 
+WHERE ... 
+ORDER BY column_name,id
+LIMIT page_size offset (page_num-1)*page_size;
+```
+
+先通过需要的列名和`id`排序，然后`LIMIT`条数为一页的数量，偏移量（跳过）`OFFSET`当前页码减1乘以一页的数量(应该能够理解)
+
+在不使用`ORDER BY `的情况下按照id顺序返回
+
+==注意==：为什么需要`id`，因为在`ORDER BY`的时候，因为`SQL`性能优化，所以在排序到`LIMIT`的数量之后就不会继续排序了，而`ORDER BY`在值相同的时候返回顺序是随机的？所以可能会出现重复查询到一条数据或者没有查询到全部的情况，加上不可重复的`id`，会避免这种情况
+
