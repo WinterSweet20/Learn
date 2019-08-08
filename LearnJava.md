@@ -1,3 +1,13 @@
+# JVM详解
+
+JVM(Java Virtual Mechine)Java虚拟机的缩写
+
+Java虚拟机包括一套字节码指令集、一组寄存器、一个栈、一个垃圾回收堆和一个存储方法域
+
+
+
+
+
 # 遍历List的四种方法
 
 ##  1. for each循环
@@ -47,7 +57,6 @@ for(int num = list.size()-1; num>=0; num--){
 
 
 
-
 # 合并List
 
 ```java
@@ -94,7 +103,6 @@ list3.addAll(list2)
 
 
 <div STYLE="page-break-after: always;"></div>
-
 #  Java中常用的Page类
 
 Page类一般自己编写，不同的项目和要求可能需要不同的Page类
