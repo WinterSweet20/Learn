@@ -6,6 +6,46 @@ Java虚拟机包括一套字节码指令集、一组寄存器、一个栈、一�
 
 
 
+# Java基本数据类型
+
+Java8大基本数据类型：
+
+- 整数类 byte, short, int, long
+- 浮点类 double, float
+- 逻辑类 boolean
+- 文本类 char
+
+默认值：
+
+| 名称 | 默认值 |
+| ---- | ------ |
+| byte | 0      |
+|short|0|
+|int|0|
+|long|0L|
+|float|0.0f|
+|double|0.0d|
+|char|'u0000'|
+|boolean|false|
+
+
+
+# StringBuffer和StringBuilder
+
+相比String，StringBuffer和StringBuilder最大的区别就是能够在不产生新对象的情况下改变字符串
+
+所以StringBuffer和StringBuilder的主要方法有：
+
+| 名称 | 功能 |
+| ---- | ---- |
+|      StringBuffer.append(String s)|把s字符串加到现有里面      |
+|StringBuffer.reverse()|反转字符串|
+|StringBuffer.delete(int satrt,int end)|删除一段字符串|
+|StringBuffer.replace(int start,int end,String s)|替换一段字符串|
+
+StringBuilder方法同StringBuffer
+
+
 
 
 # 遍历List的四种方法
@@ -54,9 +94,6 @@ for(int num = list.size()-1; num>=0; num--){
 
 
 <div STYLE="page-break-after: always;"></div>
-
-
-
 # 合并List
 
 ```java
