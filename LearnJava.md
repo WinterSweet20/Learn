@@ -43,7 +43,108 @@ Java8大基本数据类型：
 |StringBuffer.delete(int satrt,int end)|删除一段字符串|
 |StringBuffer.replace(int start,int end,String s)|替换一段字符串|
 
-StringBuilder方法同StringBuffer
+StringBuilder==方法==同StringBuffer
+
+StingBuilder性能比StringBuffer高，所以在通常情况下推荐用TStringBuilder<br/>StringBuffer是线程安全的，StringBuilder不是，所以在需要线程安全的情况下必须使用StringBuffer
+
+
+
+# Java面向对象
+
+## 抽象类
+
+- 并不是所有的类都是面向对象的，如果一个类没有足够的信息来描绘一个对象，那就是抽象类
+- 除了不能实例之外，成员变量、方法，构造方法都存在，访问方式和普通类相同
+- 因为不能被实例化，所以抽象类必须被继承才能被使用
+- 父类包括子类共有的常用方法，因为父类是抽象的，所以不能直接使用
+- 抽象类表示的是一种继承关系，一个类只能继承一个抽象类
+
+语法：
+
+```java
+public abstract class Animal{
+    private String name;
+    public Animal(String name){
+        this.name = name;
+    }
+    public String getName(){
+        return name;
+    }
+    public void setName(String name){
+        this.name = name;
+    }
+    public abstract void helloWorld();
+}
+
+public class Cat extends Animal{
+    private String food;
+    public Cat(String name,String food){
+        super(name);
+        this.food = food;
+    }
+    public String getFood(){
+        return food;
+    }
+    public void setFood(String food){
+        this.food = food;
+    }
+    public void helloWorld(){
+        System.out.println("Cat:"+getName()+" say 'Hello World'");
+    }
+}
+
+public static void main(String[] args){
+    Animal kitty = new Cat("Kitty", "Fish");
+    kitty.helloWorld();//Cat:Kitty say 'Hello World'
+}
+```
+
+子类会继承抽象类的方法和成员变量<br/>子类调用父类构造方法用`super()`<br/>子类必须实现父类的抽象方法，除非该子类也是抽象类<br/>有抽象方法的一定是抽象类，抽象类不一定有抽象方法<br/>构造方法和类方法（含`static`）不能是抽象方法
+
+## 接口<del>类</del>
+
+- 接口不是类
+- 在JAVA编程语言中是一个抽象类型，是抽象方法的集合，接口通常以interface来声明。一个类通过继承接口的方式，从而来继承接口的抽象方法。
+- 类描述对象的属性和方法。接口则包含类要实现的方法
+- 除非实现接口的是抽象类，否则要实现接口中的所有方法
+- 接口无法被实例化，但是可以被实现
+- 在 Java 中，接口类型可用来声明一个变量，他们可以成为一个空指针，或是被绑定在一个以此接口实现的对象
+- 接口不能包含成员变量，==除了==**static 和 final 变量**
+- 接口支持多继承
+
+
+
+```java
+interface InterfaceName extends oneInterface,twoInterface{ //接口可多继承
+    public void methordOne();//没有方法体的方法
+    public int methordTwo();//省略abstract，隐式虚拟
+}
+
+public class ClassName implements InterfaceName,OtherInterfaceName{
+    public void methordOne(){
+        System.out.println("HelloWorld!");
+    }
+    public int methordTwo(){
+        return 0;
+    }//必须实现所有接口
+}
+```
+
+
+
+### 标记接口
+
+- 最常用的继承接口是没有包含任何方法的接口。
+
+- 标记接口是没有任何方法和属性的接口.它仅仅表明它的类属于一个特定的类型
+
+- 标记接口作用：简单形象的说就是给某个对象打个标（盖个戳），使对象拥有某个或某些特权。
+
+```java
+public interface InterfaceName{}
+```
+
+
 
 
 
