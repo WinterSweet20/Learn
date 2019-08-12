@@ -786,3 +786,68 @@ nextLine()：
 
 除此之外还有`Scanner.hasNextInt()`和`Scanner.hasNextFloat()`
 
+# 容器
+
+Java 容器分为 Collection 和 Map 两大类，其下又有很多子类：
+
+- Collection
+  - List
+    - ArrayList
+    - LinkedList
+    - Vector
+  	- Stack
+  - Set
+  	- HashSet
+  	- LinkedHashSet
+  	- TreeSet
+- Map
+	- HashMap
+  		- LinkedHashMap
+	- TreeMap
+	- ConcurrentHashMap
+	- Hashtable
+
+## Collection
+
+- Collection 是一个集合接口，它提供了对集合对象进行基本操作的通用接口方法，所有集合都是它的子类，比如 List、Set 等。
+
+- Collections 是一个包装类，包含了很多静态方法，不能被实例化，就像一个工具类，比如提供的排序方法： Collections. sort(list)。
+
+### List、Set
+
+这个世界上本没有集合<br/>有人想要回自动拓展的数组，于是有了List<br/>有人想要不重复的数组，于是有了Set<br/>有人想要自动排序的数组，于是有了TreeSet，TreeList，Tree***
+
+所以：<br/>Array固定大小，Array的内置方法没有ArrayList多(因为更多的封装)
+
+但是：<br/>Array可以存储基本类型和对象，ArrayList只能存储对象
+
+#### ArrayList&LinkedList
+
+ArrayList通过动态数组实现（*动态数组：每次当大小不够用的时候，扩容**1.5**倍*）<br/>LinkedList通过双向链表实现
+> 在插入大量数据之前推荐使用`list.ensureCapacity(int num)`方法，因为每次迭代都是数组的新建和拷贝，会浪费大量的时间和空间
+
+所以：<br/>ArrayList的随机访问速度更快<br/>LinkedList的插入和删除更快（*ArrayList插入或者删除要修改之后的每个元素的下标*）
+
+#### Vector
+
+Vector是线程安全的，而ArrayList不是<br/>但ArrayList性能要优于Vector
+
+## HashMap
+
+实现：通过`put(key,value)`和`get(key)`插入和获取值，通过传入的`key`计算`Hash`值，根据`Hash`值把数据保存在`bucket`里面，或者从中取出数据<br/>当计算出来的`Hash`值相同时，称为*Hash冲突*，个数比较少的时候使用链表存储相同的，较多的时候使用红黑树
+
+## HashSet
+
+HashSet是基于HashMap实现的，只是HashSet不允许重复值
+
+##HashMap&***
+
+### HashMap&TreeMap
+
+HashMap插入删除定位一个元素比较快，HashMap是无序的，所以有有序遍历的需求的时候，用TreeMap
+
+### HashMap&HashTable
+
+- HashMap允许key，value为空，HashTable不允许
+- HashMap不是线程安全，HashTable是
+- HashTable是保留类，需要多线程用ConcurrentHashMap替代
