@@ -851,3 +851,180 @@ HashMap插入删除定位一个元素比较快，HashMap是无序的，所以有
 - HashMap允许key，value为空，HashTable不允许
 - HashMap不是线程安全，HashTable是
 - HashTable是保留类，需要多线程用ConcurrentHashMap替代
+
+## Iterator
+
+```java
+List<String> list = new ArrayList<>;
+Iterator<String> it = list.iterator();
+while(it.hasNext()){
+    System.out.println(it.next());
+}
+```
+
+Iterator更加安全，因为可以确保当前元素在被更改的时候抛出ConcurrentModificationException
+
+# 多线程
+
+线程：一条线程是指进程中的一个单一顺序的控制流，一个进程中可以并发多个线程，每个线程并行执行不同的任务<br/>**满足编写高效率的程序来充分达到应用CPU的目的**
+
+线程的状态：
+
+- 新建状态
+- 就绪状态
+- 运行状态
+- 阻塞状态
+- 死亡状态
+
+## 线程的优先级
+
+每一个Java线程都有一个优先级，Java线程的优先级是一个数字，从1到10<br/>默认状态下分配的优先级是5<br/>线程的优先级并不能**保证**线程的执行顺序，而且非常依赖于平台
+
+## 创建一个线程
+
+创建线程的三种方法：
+
+- 实现Runnable接口
+- 通过继承Thread类本身
+- 通过Callable和Future创建线程
+
+## 通过实现Runnable
+
+实现Runnable需要实现一个方法调用`public void run()`<br/>run()可以调用其他方法，使用其他类，并声明变量，就像主线程一样  ==理解==
+
+Thread定义了几个构造方法，下面这个是常用的：
+
+```java
+Thread(Runnable threadOb,String threadName);
+```
+
+threadOb是一个实现了Runnable接口方法的一个类实例，threadName指定新线程的名字<br/>新线程创建之后你可以使用`void run()`运行它
+
+### 实例
+
+```java
+class RunnableDemo implements Runnable {
+   private Thread t;
+   private String threadName;
+   
+   RunnableDemo( String name) {
+      threadName = name;
+      System.out.println("Creating " +  threadName );
+   }
+   
+   public void run() {
+      System.out.println("Running " +  threadName );
+      try {
+         for(int i = 4; i > 0; i--) {
+            System.out.println("Thread: " + threadName + ", " + i);
+            // 让线程睡眠一会
+            Thread.sleep(50);
+         }
+      }catch (InterruptedException e) {
+         System.out.println("Thread " +  threadName + " interrupted.");
+      }
+      System.out.println("Thread " +  threadName + " exiting.");
+   }
+   
+   public void start () {
+      System.out.println("Starting " +  threadName );
+      if (t == null) {
+         t = new Thread (this, threadName);
+         t.start ();
+      }
+   }
+}
+ 
+public class TestThread {
+ 
+   public static void main(String args[]) {
+      RunnableDemo R1 = new RunnableDemo( "Thread-1");
+      R1.start();
+      
+      RunnableDemo R2 = new RunnableDemo( "Thread-2");
+      R2.start();
+   }   
+}
+```
+
+run()定义了线程需要执行的操作，start()定义了这个实现类开始运行的方法<br/>在上面这个例子是调用Thread的构造方法，然后将自身作为参入传入Thread中<br/>当调用这个实现类的start()的时候，实例化了一个Thread，然后调用自身的run()方法（*因为将自身作为参数传入了Thread的构造方法*）
+
+我的理解：
+
+自己编写一个实现类实现Runnable接口<br/>需要重写run方法，用于自定义这个线程需要做的是什么<br/>需要重写start()方法，用于怎么开始<br/>讲不清楚了，看==例子==
+
+## 通过继承Thread
+
+```java
+class ThreadDemo extends Thread {
+   private Thread t;
+   private String threadName;
+   
+   ThreadDemo( String name) {
+      threadName = name;
+      System.out.println("Creating " +  threadName );
+   }
+   
+   public void run() {
+      System.out.println("Running " +  threadName );
+      try {
+         for(int i = 4; i > 0; i--) {
+            System.out.println("Thread: " + threadName + ", " + i);
+            // 让线程睡眠一会
+            Thread.sleep(50);
+         }
+      }catch (InterruptedException e) {
+         System.out.println("Thread " +  threadName + " interrupted.");
+      }
+      System.out.println("Thread " +  threadName + " exiting.");
+   }
+   
+   public void start () {
+      System.out.println("Starting " +  threadName );
+      if (t == null) {
+         t = new Thread (this, threadName);
+         t.start ();
+      }
+   }
+}
+ 
+public class TestThread {
+ 
+   public static void main(String args[]) {
+      ThreadDemo T1 = new ThreadDemo( "Thread-1");
+      T1.start();
+      
+      ThreadDemo T2 = new ThreadDemo( "Thread-2");
+      T2.start();
+   }   
+}
+```
+
+创建一个新的类，继承Thread，然后创建一个该类的实例<br/>必须重写run()方法，也必须需要start()方法才能执行<br/>本质上也是实现了Runnable的一个实例类
+
+==同上==
+
+## Thread 方法
+
+下表列出了Thread类的一些重要方法：
+
+| **序号** |                         **方法描述**                        |
+| :------- | :-------------------------------------------------------: |
+| 1        | **public void start()** 使该线程开始执行；**Java** 虚拟机调用该线程的 run 方法。 |
+| 2        | **public void run()** 如果该线程是使用独立的 Runnable 运行对象构造的，则调用该 Runnable 对象的 run 方法；否则，该方法不执行任何操作并返回。 |
+| 3        | **public final void setName(String name)** 改变线程名称，使之与参数 name 相同。 |
+| 4        | **public final void setPriority(int priority)**  更改线程的优先级。 |
+| 5        | **public final void setDaemon(boolean on)** 将该线程标记为守护线程或用户线程。 |
+| 6        | **public final void join(long millisec)** 等待该线程终止的时间最长为 millis 毫秒。 |
+| 7        |            **public void interrupt()** 中断线程。            |
+| 8        | **public final boolean isAlive()** 测试线程是否处于活动状态。 |
+
+测试线程是否处于活动状态。 上述方法是被Thread对象调用的。下面的方法是Thread类的静态方法。
+
+| **序号** |                         **方法描述**                         |
+| :------- | :----------------------------------------------------------: |
+| 1        | **public static void yield()** 暂停当前正在执行的线程对象，并执行其他线程。 |
+| 2        | **public static void sleep(long millisec)** 在指定的毫秒数内让当前正在执行的线程休眠（暂停执行），此操作受到系统计时器和调度程序精度和准确性的影响。 |
+| 3        | **public static boolean holdsLock(Object x)** 当且仅当当前线程在指定的对象上保持监视器锁时，才返回 true。 |
+| 4        | **public static Thread currentThread()** 返回对当前正在执行的线程对象的引用。 |
+| 5        | **public static void dumpStack()** 将当前线程的堆栈跟踪打印至标准错误流。 |
