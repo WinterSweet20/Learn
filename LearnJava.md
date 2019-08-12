@@ -686,3 +686,103 @@ totalNum; //总数据量
 
 #Java Stream、File&IO
 
+![img](https://www.runoob.com/wp-content/uploads/2013/12/iostream2xx.png)
+
+流：输入流从一个源读取数据、输出流向一个目标写数据
+
+Java.io 包中的流支持很多种格式，比如：基本类型、对象、本地化字符集等
+
+```java
+BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+System.out.println(char()br.read());//读一个字符
+System.out.println(br.readline());//读一行字符
+
+String s = new String("Hello Ws.20")
+System.out.println(s);//输出s
+System.out.write(s);//输出s
+//到控制台
+
+File f = new File(FilePath);
+InputStream in = new FileInputStream(f);
+OutputStream out = new FileOutputStream(f);
+```
+
+除了 InputStream 外，还有一些其他的输入流，更多的细节参考下面链接：
+
+- [ByteArrayInputStream](https://www.runoob.com/java/java-bytearrayinputstream.html)
+- [DataInputStream](https://www.runoob.com/java/java-datainputstream.html)
+
+除了OutputStream外，还有一些其他的输出流，更多的细节参考下面链接：
+
+- [ByteArrayOutputStream](https://www.runoob.com/java/java-bytearrayoutputstream.html)
+- [DataOutputStream](https://www.runoob.com/java/java-dataoutputstream.html)
+
+更多用法[参考](https://www.runoob.com/java/java-files-io.html)
+
+## File和I/O
+
+一些关于文件和I/O的类：
+
+- [File Class(类)](https://www.runoob.com/java/java-file.html)
+- [FileReader Class(类)](https://www.runoob.com/java/java-filereader.html)
+- [FileWriter Class(类)](https://www.runoob.com/java/java-filewriter.html)
+
+```java
+String dirName = new String("Ws");
+String dirsName = new String("\user\Ws");
+
+File dir = new File(dirName);
+dir.mkdir();//创建文件夹(Ws)
+File dirs = new File(dirsName);
+dirs.mkdirs;//创建文件及其父文件夹（user和Ws都会创建）
+```
+
+File常见操作：
+
+```java
+File f = new File(FilePath);
+```
+
+
+
+| 方法 | 作用 |
+| ---- | ---- |
+|      Files. exists()|检测文件路径是否存在。|
+| Files. createFile()|创建文件|
+|Files. createDirectory()|创建文件夹|
+|Files. delete()|删除一个文件或目录|
+| Files. copy()|复制文件|
+|Files. move()|移动文件|
+|Files. size()|查看文件个数|
+|Files. read()|读取文件|
+|Files. write()|写入文件|
+
+## Scanner类
+
+java.util.Scanner 是 Java5 的新特征，我们可以通过 Scanner 类来获取用户的输入
+
+```java
+Scanner scan = new Scanner(System.in);
+while(scan.hasNext()){
+    String s = scan.next();
+}
+scan.close();
+//还有scan.nextLine(),用法同上
+```
+
+next()&nextLine()的区别：
+
+next():
+
+- 1、一定要读取到有效字符后才可以结束输入。
+- 2、对输入有效字符之前遇到的空白，next() 方法会自动将其去掉。
+- 3、只有输入有效字符后才将其后面输入的空白作为分隔符或者结束符。
+- 4、next() 不能得到带有空格的字符串。
+
+nextLine()：
+
+- 1、以Enter为结束符,也就是说 nextLine()方法返回的是输入回车之前的所有字符。
+- 2、可以获得空白。
+
+除此之外还有`Scanner.hasNextInt()`和`Scanner.hasNextFloat()`
+
