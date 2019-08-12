@@ -162,6 +162,10 @@ ArrayList通过动态数组实现（*动态数组：每次当大小不够用的�
 
 所以：<br/>ArrayList的随机访问速度更快<br/>LinkedList的插入和删除更快（*ArrayList插入或者删除要修改之后的每个元素的下标*）
 
+#### Vector
+
+Vector是线程安全的，而ArrayList不是<br/>但ArrayList性能要优于Vector
+
 ## HashMap
 
 实现：通过`put(key,value)`和`get(key)`插入和获取值，通过传入的`key`计算`Hash`值，根据`Hash`值把数据保存在`bucket`里面，或者从中取出数据<br/>当计算出来的`Hash`值相同时，称为*Hash冲突*，个数比较少的时候使用链表存储相同的，较多的时候使用红黑树
