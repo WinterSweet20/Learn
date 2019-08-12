@@ -90,7 +90,54 @@ System.out.println(stringBuilder.reverse());//olleh
 
 ## IO
 
+### 分类
 
+按功能分：输入流（input），输出流（output）
 
+按类型分：字节流和字符流
 
+字节流和字符流的区别：字节流按 8 位传输以字节为单位输入输出数据，字符流按 16 位
+
+### BIO,NIO&AIO
+
+- BIO：Block IO 同步阻塞式 IO，就是我们平常使用的传统 IO，它的特点是模式简单使用方便，并发处理能力低。一个事件对应一个线程，需要IO操作时阻塞，直到IO完成之后才继续执行
+- NIO：Non IO 同步非阻塞 IO，是传统 IO 的升级，客户端和服务器端通过 Channel（通道）通讯，实现了多路复用，需要IO操作的时候请求，然后程序继续做自己的事情，轮询，当IO操作的时候处理数据
+- AIO：Asynchronous IO 是 NIO 的升级，也叫 NIO2，实现了异步非堵塞 IO ，异步 IO 的操作基于事件和回调机制，需要IO操作的时候请求，然后程序继续做自己的事情，当IO操作完成的时候，os发送信息高速程序完成IO操作，程序再处理数据
+
+BIO无法处理高并发事件，NIO和AIO设计复杂，能使用简单技术解决问题就是用简单技术
+
+###Files的常用方法
+
+| 方法                     | 作用                   |
+| ------------------------ | ---------------------- |
+| Files. exists()          | 检测文件路径是否存在。 |
+| Files. createFile()      | 创建文件               |
+| Files. createDirectory() | 创建文件夹             |
+| Files. delete()          | 删除一个文件或目录     |
+| Files. copy()            | 复制文件               |
+| Files. move()            | 移动文件               |
+| Files. size()            | 查看文件个数           |
+| Files. read()            | 读取文件               |
+| Files. write()           | 写入文件               |
+
+# 容器
+
+Java 容器分为 Collection 和 Map 两大类，其下又有很多子类：
+
+- Collection
+- List
+  - ArrayList
+  - LinkedList
+  - Vector
+  - Stack
+- Set
+  - HashSet
+  - LinkedHashSet
+  - TreeSet
+- Map
+- HashMap
+  - LinkedHashMap
+- TreeMap
+- ConcurrentHashMap
+- Hashtable
 
