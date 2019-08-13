@@ -186,6 +186,31 @@ HashMap插入删除定位一个元素比较快，HashMap是无序的，所以有
 - HashMap不是线程安全，HashTable是
 - HashTable是保留类，需要多线程用ConcurrentHashMap替代
 
+## Iterator
+
+```java
+List<String> list = new ArrayList<>;
+Iterator<String> it = list.iterator();
+while(it.hasNext()){
+    System.out.println(it.next());
+}
+```
+
+Iterator更加安全，因为可以确保当前元素在被更改的时候抛出ConcurrentModificationException
+
+### Iterator与ListIterator的区别
+
+ListIterator只能遍历List，可以双向遍历，添加了一些额外的功能，比如*添加一些元素、删除一些元素*
+
+## 怎么创建一个不可修改的集合
+
+```java
+List<String> list = new ArrayList<>;
+Collection<string> col = Collection.unmodifiableCollection(list);
+```
+
+
+
 # 多线程
 
 并发和并行的区别：
