@@ -964,7 +964,6 @@ class ThreadDemo extends Thread {
       threadName = name;
       System.out.println("Creating " +  threadName );
    }
-   
    public void run() {
       System.out.println("Running " +  threadName );
       try {
@@ -978,7 +977,6 @@ class ThreadDemo extends Thread {
       }
       System.out.println("Thread " +  threadName + " exiting.");
    }
-   
    public void start () {
       System.out.println("Starting " +  threadName );
       if (t == null) {
@@ -986,16 +984,13 @@ class ThreadDemo extends Thread {
          t.start ();
       }
    }
-}
- 
+} 
 public class TestThread {
- 
-   public static void main(String args[]) {
-      ThreadDemo T1 = new ThreadDemo( "Thread-1");
-      T1.start();
-      
-      ThreadDemo T2 = new ThreadDemo( "Thread-2");
-      T2.start();
+ public static void main(String args[]) {
+     ThreadDemo T1 = new ThreadDemo( "Thread-1");
+     T1.start();
+     ThreadDemo T2 = new ThreadDemo( "Thread-2");
+     T2.start();
    }   
 }
 ```
@@ -1028,3 +1023,95 @@ public class TestThread {
 | 3        | **public static boolean holdsLock(Object x)** 当且仅当当前线程在指定的对象上保持监视器锁时，才返回 true。 |
 | 4        | **public static Thread currentThread()** 返回对当前正在执行的线程对象的引用。 |
 | 5        | **public static void dumpStack()** 将当前线程的堆栈跟踪打印至标准错误流。 |
+
+## Callable和Future
+
+```java
+public class CallableThreadTest implements Callable<Integer> {
+    public static void main(String[] args){  
+        CallableThreadTest ctt = new CallableThreadTest();  
+        FutureTask<Integer> ft = new FutureTask<>(ctt);  
+        for(int i = 0;i < 100;i++){  
+            System.out.println(Thread.currentThread().getName()+" 的循环变量i的值"+i);  
+            if(i==20){  
+                new Thread(ft,"有返回值的线程").start();}  
+        }  
+        try {  
+            System.out.println("子线程的返回值："+ft.get());} 
+        catch (InterruptedException e){  
+            e.printStackTrace();} 
+        catch (ExecutionException e){  
+            e.printStackTrace(); }  
+  }
+    @Override  
+    public Integer call() throws Exception{  
+        int i = 0;  
+        for(;i<100;i++){  
+            System.out.println(Thread.currentThread().getName()+" "+i);}  
+        return i;  
+    }  
+}
+```
+
+- 实现Callable接口，并实现call()方法
+- call()方法中是线程的执行体
+- 使用FutureTask类来包装对象，该对象封装了call()的返回数据类型
+- 使用Future的实例作为Thread创建实例的参数
+- 调用FutureTask.get()获得线程执行后的返回值
+
+## 三种方法的对比
+
+实现Callable和Runnable时，只是实现了对应的接口，还可以继承其他类
+
+使用Thread的时候，编写简单，访问当前线程简单（*直接使用this*）
+
+##需要了解的
+
+- 线程同步
+- 线程间通信
+- 线程死锁
+- 线程控制：挂起、停止和恢复
+
+有限理解多线程的关键是理解程序是并行执行的而不是串行执行的，通过对多线程的使用，可以编写出非常高效的程序，不过如果创建太多的线程，实际上是变慢了，因为：**切换上下文的开销（时间内存等）大于程序执行的开销**
+
+## 守护进程
+
+守护进程是运行在后台的一种特殊的进程。它独立于控制终端周期性的某个任务或者等待处理某些任务<br/>不会因为关闭窗口等原因结束进程，常见于服务器等，java 的垃圾回收进程也是守护进程
+
+守护进程的特点：<br/>守护进程必须与其运行前的环境隔离开来。这些环境包括未关闭的文件描述符、[控制终端](https://baike.baidu.com/item/控制终端)、[会话](https://baike.baidu.com/item/会话)和[进程组](https://baike.baidu.com/item/进程组)、工作目录以及文件创建[掩码](https://baike.baidu.com/item/掩码)等。这些环境通常是守护进程从执行它的[父进程](https://baike.baidu.com/item/父进程)(特别是shell)继承下来的
+
+守护进程和普通进程的本质是一样的，所以，创建守护进程的方法就是一一实现它的那些特征：
+
+1. 创建子进程，终止父进程（使程序以僵尸进程的形式运行，从一定程度上做到了与控制终端脱离）
+2. 在子进程中创建新会话，并担任该会话组的组长，使用系统函数setsid()，setsid()的三个作用：
+  1. 摆脱原会话的控制
+  2. 摆脱原进程组的控制
+  3. 摆脱原终端的控制
+3. 改变工作目录
+4. 重设文件创建掩码
+5. 关闭文件描述符
+
+## sleep(),wait()&yeild()
+
+![img](https://upload-images.jianshu.io/upload_images/66827-780462c52b8f5a83.png)
+
+### sleep()
+
+- Thread.sleep()方法用来暂停线程的执行，将CPU放给线程调度器。
+- Thread.sleep()方法是一个静态方法，它暂停的是当前执行的线程。
+- Java有两种sleep方法，一个只有一个毫秒参数，另一个有毫秒和纳秒两个参数。
+- 与wait方法不同，sleep方法不会释放锁
+- 如果其他的线程中断了一个休眠的线程，sleep方法会抛出Interrupted Exception。
+- 休眠的线程在唤醒之后不保证能获取到CPU，它会先进入就绪态，与其他线程竞争CPU。
+- 有一个易错的地方，当调用t.sleep()的时候，会暂停线程t。这是不对的，因为Thread.sleep是一个静态方法，它会使当前线程而不是线程t进入休眠状态。
+
+==注意==：sleep()和yeild()都是作用于**当前进程**
+
+###wait()
+
+wait()用于线程间通信，来源于Object类<br/>在调用的时候会释放所持有对象的管程和锁（sleep()不会)<br/>在调用之后会等待某种条件(自定义)满足之后调用notify()函数使之进入就绪状态参与CPU竞争
+
+### yeild()
+
+只是释放CPU资源，让其他线程有运行的机会<br/>哪个线程能获得CPU完全取决于调度器，有时候甚至是调用yeild()方法的线程再次获得CPU
+

@@ -186,3 +186,49 @@ HashMap插入删除定位一个元素比较快，HashMap是无序的，所以有
 - HashMap不是线程安全，HashTable是
 - HashTable是保留类，需要多线程用ConcurrentHashMap替代
 
+# 多线程
+
+并发和并行的区别：
+
+并行：多个处理器或者多核处理器同时处理多个任务<br/>串行：多个任务在同一个CPU核上，按照细分的时间片交替执行，在逻辑上看起来像是在同时执行的
+
+并行：两个咖啡机两条队列<br/>串行：一台咖啡机两条队列（轮流服务一个）
+
+一个进程由至少一个线程组成
+
+## 守护进程
+
+守护线程是运行在后台的一种特殊进程。它独立于控制终端并且周期性地执行某种任务或等待处理某些发生的事件。在 Java 中垃圾回收线程就是特殊的守护线程。
+
+## 创建线程的三种方式
+
+- 继承Thread类重写run()方法
+- 实现Runnable接口
+- 实现Callable接口
+
+Runnable和Callable的区别：<br/>Callable有返回值，创建的步骤方法不同
+
+## 线程的几种状态
+
+- 新建状态:NEW
+- 就绪状态
+- 运行状态:RUNNABLE
+- 阻塞状态:BLOCKED,WAITING,TIMED_WAITING
+- 死亡状态:TERMINATED
+
+## sleep() 和 wait() 的区别
+
+- 类的不同：sleep() 来自 Thread，wait() 来自 Object。
+- 释放锁：sleep() 不释放锁；wait() 释放锁。
+- 用法不同：sleep() 时间到会自动恢复；wait() 可以使用 notify()/notifyAll()直接唤醒。
+
+## notify()和notifyAll()的区别
+
+notify()唤醒一个线程，唤醒哪个线程由虚拟机控制<br/>notifyAll()唤醒所有线程参与CPU和锁的竞争，竞争成功的线程继续执行
+
+## run()和start()的区别
+
+run()中定义的是线程执行的代码块，可以执行多次<br/>start()用于启动线程，只能执行一次
+
+## 线程池
+
