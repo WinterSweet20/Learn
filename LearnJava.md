@@ -1115,3 +1115,144 @@ wait()用于线程间通信，来源于Object类<br/>在调用的时候会释放
 
 只是释放CPU资源，让其他线程有运行的机会<br/>哪个线程能获得CPU完全取决于调度器，有时候甚至是调用yeild()方法的线程再次获得CPU
 
+## 线程池
+
+###ThreadPoolExecutor
+
+ThreadPoolExecutor、AbstractExecutorService、ExecutorService和Executor之间的关系：
+
+interface ExccutorService extends interface Excutor;
+
+abstract class AbstractExcutorService implements ExcutorService;
+
+class ThreadPoolExcutor extends AbstractExcutorService;
+
+ThreadPoolExecutor、AbstractExecutorService、ExecutorService和Executor
+
+ThreadPoolExcutor的几个关键参数：
+
+- corePoolSize：核心池大小
+- maximumPoolSize ：线程池最大线程数量
+- keepAliveTime ：当线程空闲的时候允许的最长存活时间
+- allowCoreThreadTimeOut：是否允许设置线程存活时间
+- unit：keepAliveTime的单位
+- workQueue：阻塞队列，核心池满的时候新来的任务放在阻塞队列
+- threadFactory：线程工厂，主要用来创建线程
+- handle：拒绝任务处理的时的策略
+  - 丢弃任务并抛出RejectedExecutionException异常
+  - 丢弃任务但不抛出异常
+  - 丢弃队列最前面的任务并尝试重新执行（重复此过程）
+  - 由调用线程处理该任务
+
+corePoolSize和maximumPoolSize的区别：
+
+> corePoolSize是线程池的最大容量<br/>当线程池的里面线程的数量达到corePoolSize的时候，会放到缓冲队列里面<br/>当缓冲队列为空并且线程数量小于corePoolSize时会销毁线程
+>
+> maximumPoolSize是线程池允许的最大容量<br/>当线程池满并且缓冲队列满的时候会创建新的线程来执行任务（此时线程数量已经大于corePoolSize）<br>但是线程池容量最大不可以超过maximumPoolSize，否则抛出异常
+
+ThreadPoolExcutor的几个关键方法：
+
+- execute()：向线程池提交一个任务，交由线程池执行
+- submit()：也是提交任务，但是会返回结果
+- shutdown()：关闭线程池（等待已经存在任务执行完）
+- shutdownNow：立即关闭线程池
+
+### 线程池状态
+
+- RUNNING：接收新的任务，处理等待队列中的任务
+- SHUTDOWN：不再接收新的任务，等待正在处理的和等待队列中的任务全部处理完成
+- STOP：不接收新的任务，结束正在执行的任务，清空等待队列
+- TIDYING：所有线程销毁，队列为空，在向TERMINATED转变，会执行钩子方法 terminated()
+- TERMINATED：所有工作线程已经销毁，等待队列为空
+
+### 线程池大小
+
+如何合理配置线程池的大小：
+
+> 如果是CPU密集型
+>
+> &blablabla.....
+
+线程池请看这篇==[Blog](https://www.cnblogs.com/dolphin0520/p/3932921.html)==
+
+##Java锁机制
+
+Java多线程加锁机制：
+
+- Synchronized
+- 显示Lock
+
+### Synchronized
+
+Synchronized是一个关键字，用来将代码锁起来：
+
+```java
+public synchronized void methordName(){}
+```
+
+- synchronized是一种互斥锁
+
+  > 一次只允许一个线程进入被锁住的代码块
+
+- synchronized是一种内置锁/监视器锁
+
+  > Java每个对象中都有一个内置锁，synchronized关键字就是激活这种内置锁的
+
+Synchronized的作用：
+
+> - 原子性：没有线程能够同时访问被保护的代码块
+> - 可见性：修改后的变量对其他线程是可见的
+
+#### 原理
+
+妈呀，写的啥啊，懵逼来懵逼去
+
+具体可参考：
+
+- [blog.csdn.net/chenssy/art…](https://link.juejin.im/?target=https%3A%2F%2Fblog.csdn.net%2Fchenssy%2Farticle%2Fdetails%2F54883355)
+- [blog.csdn.net/u012465296/…](https://link.juejin.im/?target=https%3A%2F%2Fblog.csdn.net%2Fu012465296%2Farticle%2Fdetails%2F53022317)
+
+#### 使用
+
+```java
+public class testClass{
+    public synchronized void test(){
+    //方法体
+	}
+
+	public void test(){
+    	synchronized(this){
+    	    //代码块
+    	}
+	}
+}
+```
+
+上面的例子是修饰方法和代码块的使用方法
+
+修饰静态方法时：
+
+> 因为静态方法属于类方法，所以获得的锁是属于类的锁（类的字节码文件对象）
+
+修饰普通方法或者代码块时：
+
+>  获取的是对象锁
+
+**它们是不冲突的**
+
+重入性:
+
+> 例如对象锁<br/>当你因为要使用某一代码块已经获得了一个实例对象的对象锁，再访问其他代码块的内容，也是可以的！！！
+
+因为锁的持有者是线程，一个线程持有一个实例对象的对象锁，自然可以访问它的所有锁定的代码块
+
+释放锁：
+
+> 被锁定的方法/代码块执行完毕之后会自动释放锁不需要其他操作<br/>当执行的代码块出现异常的时候其持有的所有锁都会自动释放<br/>程序进入WAITING状态时（比如调用了wait()方法）
+>
+> 所以：不会出现异常而导致死锁的情况
+
+### 显式锁Lock
+
+https://blog.csdn.net/a78270528/article/details/79896466自己看
+
