@@ -1,3 +1,7 @@
+[菜鸟](https://www.runoob.com/java/java-tutorial.html)
+
+
+
 # JVM详解
 
 JVM(Java Virtual Mechine)Java虚拟机的缩写
@@ -1255,4 +1259,109 @@ public class testClass{
 ### 显式锁Lock
 
 https://blog.csdn.net/a78270528/article/details/79896466自己看
+
+# Java序列化
+
+Java的序列化机制：
+
+> 用于保存对象在内存中的各种状态和属性，并且可以再读出来<br/>一个对象可以被表示为一个字节序列，该字节序列包括该对象的数据、有关对象的类型信息和存储在对象中数据的类型<br/>将序列化对象写入文件之后可以从文件中读取出来并且进行反序列化<br/>整个过程是JVM独立的，即序列化和反序列化不受平台影响
+
+一个类想要序列化成功，必须满足两个条件：
+
+> - 该类必须实现`implements java.io.Serializable`对象
+> - 该类的属性必须都是可序列化的，如果不可，必须注明是短暂的`public transient ...`
+>
+> 如果想要知道一个Java的标准类是否可序列化，只需要看它有没有实现`java.io.Serizlizable`
+
+序列化与反序列化：
+
+```java
+import java.io.*
+
+public class outTest{
+	public static void main(String[] args){
+		Student s = new Student();
+		s.setName("shuyang.lei");
+		try{
+			FileOutputStream fileOut = new FileOutputStream("user/output/stu.ser");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(s);
+			out.close();
+			fileOut.close();
+		}catch(IOException i){
+			i.printStackTrace;
+		}
+	}
+}
+```
+
+
+
+```java
+import java.io.*
+
+public class inTest{
+	public static void main(String[] args){
+		Student s = null;
+		try{
+			FileInputStream fileIn = new FileInputStream("user/output/stu.ser");
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			e = (Student)in.readObject;
+			in.close();
+			fileIn.close();
+		}catch(IOException i){
+         	i.printStackTrace();
+         	return;
+      }catch(ClassNotFoundException c){
+         System.out.println("Student class not found");
+         c.printStackTrace();
+         return;
+      }
+      System.out.println("Name:"+s.getName());
+	}
+}
+```
+
+==注意==:
+
+- 记得关闭`FileOutputStream,ObjectOutputStream`等
+- 系列化输出的文件后缀名标准约定为.ser
+- 记得`catch  IOException&ClassNotFoundException`
+- 如果因为标注了`transient`而没有序列化的属性反序列化之后是改类型的默认值int(0),Object(null)
+
+# Java代理
+
+代理类，已经与之对应的委托类
+
+优点：
+
+> 可以隐藏委托类的实现<br/>可以实现客户与委托类之间的解耦，可以在不修改委托类的情况下额外做一些处理（修改隐藏类）
+
+## 静态代理
+
+```java
+public class StudentAgent implements People{
+    private Student stu;
+    
+    public StudentAgent(Student stu){
+        this.stu = stu;
+    }
+    public void learn(Object IT){
+        if(ITStudent){
+        	stu.learn(math);
+        }
+    }
+    public void run(){
+        stu.run();
+    }
+}
+```
+
+大概就是Student类的代理：
+
+> 存储了一个student类型的对象<br/>方法调用存储的student对象的方法<br/>还可以在不修改Student类的情况下加（或者修改）一些逻辑，比如上面的如果不是IT学生不学IT<br/>一般情况下委托类和代理类都实现统一接口或者派生自相同的父类
+
+静态代理类需要在程序执行之前已经存在（手动编写）
+
+## 动态代理
 
