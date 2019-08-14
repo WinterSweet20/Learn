@@ -1468,3 +1468,5 @@ public class test{
 
 原生代理不需要导入包，依靠java原生的类就可以实现<br/>原生代理委托类必须要实现至少一个接口，cglib代理不用
 
+#Clone
+
