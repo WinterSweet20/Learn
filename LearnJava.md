@@ -1,4 +1,4 @@
-[菜鸟](https://www.runoob.com/java/java-tutorial.html)
+[菜鸟](https://www.runoob.com/java/java-tutorial.html)、[JavaSchool](http://www.51gjie.com/)
 
 
 
@@ -1364,4 +1364,107 @@ public class StudentAgent implements People{
 静态代理类需要在程序执行之前已经存在（手动编写）
 
 ## 动态代理
+
+代理类在程序运行时被创建，也就是说代理类并不是在Java代码中定义的，而是根据我们在Java代码中的逻辑自动生成的
+
+相比静态代理的优势：
+
+> 可以很方便的对代理类的函数进行统一处理
+
+### 使用动态代理
+
+####JDK原生代理
+
+```java
+public class DynamicProxy implements InvocationHandler{
+    private Object obj;
+    public DynamicProxy(Object obj){
+        this.obj = obj;
+    }
+    @Override
+    public Object invoke(Object proxy, Method method,Object[] args) throws Throwable{
+        System.out.println("Before");
+        Object result = method.invoke(obj, args);
+        Sys.out.println("After");
+        return result;
+    }
+}
+```
+
+`method.invoke`：method类的方法，反射调用
+
+`DynamicProxy`：自己编写的中介类，实现的是`InvocationHandler`接口，必须要重写`invoke`方法，在invote中调用委托类的方法，并且可以统一编写自己的逻辑。
+
+```java
+public class Main{
+    public static void main(String[] args){
+        DynamicProxy inter = new DynamicProxy(new Student());
+        //执行下面这条语句会产生一个$Proxy0.class的文件，即动态生成的代理类文件
+        System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles","true");
+        Student stu = (Student)(Proxy.newProxyInstance(Student.class.getClassLoader(),new class[] {Student.class},inter));
+        stu.run();
+        stu.learn(IT);
+    }
+}
+```
+
+首先实例化一个中介类，传入委托类<br>然后调用`Proxy.newProxyInstance()`来获取一个代理类实例<br/>再然后就可以使用了
+
+`public static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h) throws IllegalArgumentException `
+
+方法参数列表：
+
+> loader：定义了代理类的ClassLoder<br/>interfaces：代理类实现的接口列表<br/>h：调用处理器，也就是我们上面定义的实现了InvocationHandler接口的类实例
+
+####cglib代理
+
+cglib是一种第三方代理模式，在使用的时候需要导入以下三方jar包：
+
+1. asm-2.2.3.jar
+2. asm-commons-2.2.3.jar
+3. asm-util-2.2.3.jar
+4. cglib-nodep-2.1_3.jar
+
+CGLIB动态代理模式不需要想JDK动态代理模式那样使用接口<br/>一个非抽象类就可以<br/>这个非抽象类需要实现MethodInterceptor接口，并重写intercept方法
+
+```java
+public class Hello{
+    public void sayHello(){
+        System.out.println("HelloWorld");
+    }
+}
+
+public class CglibProxy implements MethodInterceptor{
+    public Object getProxy(Class cls){
+        Enhancer en = new Enhancer();
+        en.SetSuperclass(cls);
+        en.SetCallback(this);
+        Object proxy = en.create();
+        return proxy;
+    }
+    @Override
+    public Object intercept(Object proxy,Method method,Object[] args,MethodProxy methodPrxy) throws Throwable{
+        System.out.println("Before");
+        Object result = methodProxy.invokeSuper(proxy, args);
+        System.out.println("After");
+        return result;
+    }
+}
+
+public class test{
+    public static void main(String[] args){
+        CglibProxy cg = new CglibProxy();
+        Hello h = (Hello)cg.getProxy(Hello.class);
+        h.sayHello();
+    }
+}
+```
+
+在一般的例子中，getProxy里面的步骤并没有写到中介类里面（我觉得包装之后更优雅）<br/>区别就是在`setCallback`的时候传的参数就不是`this`<br/>而是`en.setCallback(new yourProxy)`
+
+我觉得上面的代码还是蛮简单的，可以理解，不可以理解的都时不变的，copy就好了
+
+#### 对比
+
+原生代理不需要导入包，依靠java原生的类就可以实现<br/>原生代理委托类必须要实现至少一个接口，cglib代理不用
 
