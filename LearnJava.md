@@ -1324,6 +1324,8 @@ public class inTest{
 
 ==注意==:
 
+- ==默认Student类已经标注实现了Serializable接口==
+
 - 记得关闭`FileOutputStream,ObjectOutputStream`等
 - 系列化输出的文件后缀名标准约定为.ser
 - 记得`catch  IOException&ClassNotFoundException`
@@ -1469,4 +1471,42 @@ public class test{
 原生代理不需要导入包，依靠java原生的类就可以实现<br/>原生代理委托类必须要实现至少一个接口，cglib代理不用
 
 #Clone
+
+实现克隆的两种方法：
+
+- 实现Cloneable接口并重写Clone()方法
+- 实现Serializable接口，通过序列化实现真正的深克隆
+
+##Cloneable
+
+**大概就是没什么用，真没什么用，也不知道为什么要存在的接口，很ZZ**
+
+只是注意一下以下就好：
+
+- clone()属于Object，但是要使用clone()必须要实现Cloneable接口<br/>至于为什么，好像只是用来标记，表示这个类的对象可以被clone()<br/>而且！！！！==前方高能==：好像不是给计算机标记，是给自己标记
+- clone()默认实现的是浅克隆，要深克隆，需要自己实现，很麻烦<br/>要实现深克隆当前类包含的所有对象的类<br/>==都！要！实！现！Cloneable！==，是不是超级**ZZ**
+- 另外，因为很麻烦所以不使用，所以不写怎么用了:dog:
+
+## Serializable
+
+前面已经提到了：要实现序列化必须`implements Serializable`<br/>所以通过Serializable实现深克隆就是序列化之后再反序列化
+
+需要注意的是：
+
+- 如果一个类实现了Serializable接口，那么它的子类也默认可以被序列化
+- 如果一个类要实现Serializable接口，那么它的父类必须要有无参的构造函数
+
+序列化和反序列化参照上面的笔记
+
+[简书](https://www.jianshu.com/p/1d73b49a8a1f)
+
+# Java Web
+
+## Servlet
+
+Servlet在==[这儿](./JavaServlet.md)==！！！！
+
+##JSP
+
+JSP在==[这儿](./JSP.md)==！！！！
 
