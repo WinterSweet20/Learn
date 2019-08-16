@@ -153,3 +153,91 @@ https://www.runoob.com/servlet/servlet-environment-setup.html
 
 ## Servlet的生命周期
 
+Servlet 生命周期可被定义为从创建直到毁灭的整个过程。以下是 Servlet 遵循的过程：
+
+- Servlet 通过调用 **init ()** 方法进行初始化。
+- Servlet 调用 **service()** 方法来处理客户端的请求。
+- Servlet 通过调用 **destroy()** 方法终止（结束）。
+- 最后，Servlet 是由 JVM 的垃圾回收器进行垃圾回收的。
+
+生命周期的方法：
+
+### init()
+
+在第一次创建Servlet的时候调用一次，用于一次性初始化，后续不再调用
+Servlet创建于用户第一调用对应该Servlet的URL时
+当调用一个Servlet的时候，就会创建一个Servlet实例，每一个用户的请求会产生一个新的线程
+init()简单创建或者加载一些数据，用于Servlet的整个生命周期
+
+```java
+public void init() throws ServletException{
+    //初始化的代码
+}
+```
+
+###service()
+
+Service()是执行任务的实际方法
+Servlet调用Service来处理客户端的请求，并把响应的数据返回
+Service检查HTTP请求的类型，然后调用适当的方法：doGet,doPost,doDelete,doPut等
+service由容器调用，do...方法由service调用
+所以我们只需要实现do...方法即可
+
+图解：
+
+![Servlet çå½å¨æ](https://www.runoob.com/wp-content/uploads/2014/07/Servlet-LifeCycle.jpg)
+
+- ​	第一个到达服务器的HTTP请求被委派到Servlet容器
+- Servlet容器在调用方法之前加载Servlet
+- 然后Servlet使用多线程处理多个请求，每个线程单一地执行service()方法
+
+
+
+####doGet()
+
+处理：
+
+>  GET请求来自一个URL的正常请求
+> 或者来自一个未指定METHOD的HTML表单
+
+```java
+public void doGet(ServletRequst request,ServletResponse response) throws ServletException IOException{
+    //处理逻辑
+}
+```
+
+#### doPost()
+
+处理：
+
+> 指定了METHOD为POST的请求
+
+```java
+public void doPost(ServletRequst request,ServletResponse response) throws ServletException IOException{
+    //处理逻辑
+}
+```
+
+### destroy()
+
+destroy()只会被调用一次，在Servlet生命周期终止的时候调用
+
+需要（可以）做的操作：
+
+> 关闭数据库连接
+> 停止后台线程
+> 把Cookie列表或者点击计数器写入磁盘
+> 执行其他类似的清理活动
+
+在调用destroy之后，Servlet对象被标记为垃圾回收（**由JVM进行回收**）
+
+```java
+public void destroy(){
+    //销毁逻辑
+}
+```
+
+
+
+## Servlet实例
+
