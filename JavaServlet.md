@@ -237,7 +237,109 @@ public void destroy(){
 }
 ```
 
+==注意==：
+
+destroy被调用后，Servlet被销毁，但是并没有立即被回收，再次请求时，并没有重新初始化
+
 
 
 ## Servlet实例
+
+```java
+// 导入必需的 java 库
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class HelloWorld extends HttpServlet {
+  private String message;
+  public void init() throws ServletException{
+      // 执行必需的初始化
+      message = "Hello World";
+  }
+
+  public void doGet(HttpServletRequest request,HttpServletResponse response)
+      throws ServletException, IOException{
+      // 设置响应内容类型
+      response.setContentType("text/html");
+      // 实际的逻辑是在这里
+      PrintWriter out = response.getWriter();
+      out.println("<h1>" + message + "</h1>");
+  }
+  public void destroy(){
+      // 什么也不做
+  }
+}
+```
+
+### 编译
+
+### 部署
+
+比较没有兴趣，[链接](https://www.runoob.com/servlet/servlet-first-example.html)
+
+## Servlet表单数据
+
+### GET方法
+
+向用户发送已编码的用户信息，页面和已编码的信息中间用?隔开：
+
+```http
+http://www.test.com/hello?key1=value1&key2=value2
+```
+
+浏览器向服务器传递信息默认使用GET方法
+如果传递的是密码或者其他敏感信息，不要使用GET方法，会出现在地址栏中
+GET方法有大小限制，最多只能有1024个字符
+这些信息使用QUERY_STRING头传递，可通过QUERY_STRING环境变量访问，使用doGet()方法处理
+
+### POST请求
+
+打包消息的方法与GET基本相同
+不是把信息放在URL中进行发送，而是把这些信息作为单独的一个消息
+消息以标准输出的形式传到后台程序，您可以解析和使用这些标准输出
+使用doPost()处理这些请求
+
+###读取表单数据
+
+方法：
+
+- `getParameter()`:你可以调用`request.getParameter()`来获取表单参数的值
+- `getParameterValues()`：如果参数出现一次以上，则调用该方法，并返回多个值，例如复选框
+- `getParameterNames()`：如果想得到完整的所有参数列表，使用该方法
+
+### 使用GET方法实例
+
+请求的url：
+
+`http://localhost:8080/TomcatTest/HelloForm?name=菜鸟教程&url=www.runoob.com`
+
+处理的service方法：
+
+```java
+ protected void doGet(HttpServletRequest request, HttpServletResponse response)
+     throws ServletException, IOException {
+        // 设置响应内容类型
+     response.setContentType("text/html;charset=UTF-8");
+     PrintWriter out = response.getWriter();
+     String title = "使用 GET 方法读取表单数据";
+     // 处理中文
+     String name =new String(request.getParameter("name").getBytes("ISO8859-1"),"UTF-8");
+     String docType = "<!DOCTYPE html> \n";
+     out.println(docType +
+                 "<html>\n" +
+                 "<head><title>" + title + "</title></head>\n" +
+                 "<body bgcolor=\"#f0f0f0\">\n" +
+                 "<h1 align=\"center\">" + title + "</h1>\n" +
+                 "<ul>\n" +
+                 "  <li><b>站点名</b>："
+                 + name + "\n" +
+                 "  <li><b>网址</b>："
+                 + request.getParameter("url") + "\n" +
+                 "</ul>\n" +
+                 "</body></html>");
+    }
+```
+
+需要注意的：`response.getWriter().println()`、`request.getParameter().getBytes()`
 
