@@ -12,7 +12,10 @@ Servlet和HTTP协议是紧密联系的，其可以处理HTTP协议相关的所�
 
 Java Servlet 通常情况下与使用 CGI（Common Gateway Interface，公共网关接口）实现的程序可以达到异曲同工的效果。<br/>相比于 CGI，Servlet 有以下几点优势：
 
-> 性能更好<br/>Servlet在Web服务器的地址空间内执行（没必要创建一个单独的进程处理用户请求）<br/>Servlet是基于Java编写的，所以独立于平台<br/>服务器上的Java安全管理器保护计算机上的资源，所以Servlet是可信的<br/>Java类库的全部对Servlet都是可用的，可以通过sockets和RMI机制与applets、数据库或者其他软件交互
+> 性能更好
+> Servlet在Web服务器的地址空间内执行（没必要创建一个单独的进程处理用户请求）
+> Servlet是基于Java编写的，所以独立于平台
+> 服务器上的Java安全管理器保护计算机上的资源，所以Servlet是可信的<br/>Java类库的全部对Servlet都是可用的，可以通过sockets和RMI机制与applets、数据库或者其他软件交互
 
 ###Servlet构架：
 
