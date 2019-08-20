@@ -1,5 +1,7 @@
 # Servlet
 
+[菜鸟](https://www.runoob.com/servlet/servlet-tutorial.html):https://www.runoob.com/servlet/servlet-tutorial.html
+
 ##Servlet简介
 
 Servlet其实是Server与Applet的缩写，所以Servlet就是，**服务端小应用**
@@ -588,3 +590,12 @@ public void doGet(HttpServletRequest request,HttpServletResponse response)
 
 ## 编写过滤器
 
+
+
+#web.xml
+
+https://blog.csdn.net/m751075306/article/details/9452893
+
+https://blog.csdn.net/believejava/article/details/43229361
+
+https://www.jianshu.com/p/285ad45f60d1
