@@ -590,7 +590,106 @@ public void doGet(HttpServletRequest request,HttpServletResponse response)
 
 ## 编写过滤器
 
+Servlet过滤器可以动态地**拦截**请求或响应，以**变换**或**使用**包含在请求或响应中的信息
 
+可以将一个或者多个Servlet过滤器附加到一个Servlet或者一组Servlet
+Servlet过滤器也可以附加到JavaServlet Page(JSP)文件和HTML页面
+
+调用Servlet前调用所有附加的Servlet过滤器
+
+Servlet过滤器就是可用于Servlet编程的Java类，可以实现以下目的：
+
+> - 在客户的请求访问后端资源之前，拦截这些请求
+> - 在服务器的响应发回到客户端之前，处理这些请求
+
+根据规范建议的各种类型的过滤器：
+
+| 名称                         | 作用                     |
+| ---------------------------- | ------------------------ |
+| Authentication Filters       | 身份验证过滤器           |
+| Data Compression Filters     | 数据压缩过滤器           |
+| Encryption Filters           | 加密过滤器               |
+| ......                       | 触发资源访问事件过滤器   |
+| Img Conversion Filters       | 图像转换过滤器           |
+| Logging And Auditing Filters | 日志记录和审核过滤器     |
+| MIME-TYPE Chain Filters      | MIME-TYPE链过滤器        |
+| Tokenizing Filters           | 标记化过滤器             |
+| XSL/T Filters                | XSL/T过滤器，转换XML内容 |
+
+过滤器通过web.xml中的XML标签来声明，然后映射到你的应用程序Servlet名称或者URL模式
+当Web容器启动Web应用程序的时候，它会为你在web.xml中声明的每一个过滤器创建一个实例
+Filter执行的顺序和你在web.xml中的配置顺序一致
+一般把filter配置在所有Servlet之前
+
+### Filter的方法
+
+`public void doFilter(ServletRequest, ServletResponse, FilterChain)`
+
+> 完成实际的过滤操作
+> 当客户端请求方法与过滤器设置匹配的URL时，Servlet容器先调用过滤器的doFilter方法
+> Filter用户访问后续过滤器
+
+`public void init(FilterConfig filterConfig)`
+
+> web应用程序启动时，web服务器将创建Filter的实例对象，并调用其init方法，读取web.xml配置
+> filter对象只会创建一次，init方法也只会执行一次
+> 通过init方法的参数，可获得代表当前filter配置信息的FilterConfig对象
+
+```java
+public void init(FilterConfig config) throws ServletException{
+    String paramValue = config.getInitParameter("paramName");
+    System.out.println("paramName:" + paramValue);
+}
+```
+
+
+
+`public void destroy()`
+
+> Servlet容器在销毁过滤器实例前调用该方法，在该方法中释放Servlet过滤器占用的资源
+
+
+
+### Filter实例
+
+```java
+import javax.servlet.*
+import java.util.*
+
+public class TestFilter implements Filter{
+	public void init(FilterConfig filterConfig) throws ServletException{
+		String paramValue = filterConfig.getInitParameter("paramName");
+	}
+	public void doFilter(ServletRequest request,ServletResponse response,FilterChain chain) throws java.io.IOException,ServletException{
+		System.out.println("paramName:" + paramValue);
+		//把请求传回给过滤链
+		chain.doFilter(request, response);
+	}
+	public void destroy(){
+		/*在Filter实例被Web容器移除之前调用*/
+	}
+}
+```
+
+### FilterChain
+
+`FilterChain`：过滤链
+
+==以下内容都是**自己理解**==：
+
+> 当web.xml中有多个Filter的时候，Web容器就会生成一个FilterChain对象
+>
+> Filter只会初始化一次，FilterChain每次请求都会创建一个新的FilterChain对象
+>
+> 可以理解为一个链式存储结构，调用完一个FilterChain中的Filter后指向下一个Filter
+>
+> 优点是：可以随时停止（**如果不调用FilterChain的doFilter方法，就不会调用下一个Filter**）
+>
+> 停止的情况：在FilterChain的某个环节检测到请求不合规，直接返回，提示错误信息，自然就不会用调用下面的Filter
+
+
+
+## Servlet异常处理
 
 
 
@@ -701,6 +800,20 @@ Filter的配置就是将此项目与一个实现`javax.servlet.Filter`接口的�
     <url-pattern>/*</url-pattern>
 </filter-mapping>
 ```
+
+其他元素：
+
+> - `<servlet-name>`：指定过滤器锁拦截的Servlet名称
+> - `<dispatcher>`：指定过滤器所拦截的资源被Servlet容器调用的方式
+>   可以是REQUEST,INCLUDE,FORWARD和EORRO之一，默认REQUEST
+>   用户可以设置多个`<dispatcher>`子元素用来指定filter 的多种调用方式进行拦截
+>   - REQUEST：当用户直接访问页面时，Web容器将会调用过滤器
+>     如果目标资源是通过`RequestDispatcher`的`include()`或`forward()`方法访问的，则不会调用
+>   - INCLUDE：如果目标资源是通过`RequestDispatcher`的`include()`方法访问的，调用
+>   - FORWARD：如果目标资源是通过`RequestDispatcher`的`forward()`方法访问的，调用
+>   - ERROR：如果目标资源是通过声明式异常处理机制调用是，该过滤器被调用
+
+
 
 ### listener
 
