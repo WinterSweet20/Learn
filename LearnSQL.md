@@ -205,7 +205,7 @@ WHERE子句中使用的连接语句，在数据库语言中，被称为隐性连
 
 
 
-<img src = "https://www.runoob.com/wp-content/uploads/2019/01/sql-join.png" alt="无法显示图片"/>
+<img src = ".\img\sql-join.png" alt="无法显示图片"/>
 
 #### INNER JOIN
 

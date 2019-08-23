@@ -1,4 +1,4 @@
-![æ¨¡åå¾](https://images.gitbook.cn/f3c480e0-3be2-11e9-82f8-0f2e500ca934)
+![æ¨¡åå¾](.\img\面试题技能书.png)
 
 [CSDN](https://gitchat.csdn.net/activity/5c6cf6044bb44360f3370255)
 

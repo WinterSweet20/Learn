@@ -690,7 +690,7 @@ totalNum; //总数据量
 
 #Java Stream、File&IO
 
-![img](https://www.runoob.com/wp-content/uploads/2013/12/iostream2xx.png)
+![img](.\img\IO流.png)
 
 流：输入流从一个源读取数据、输出流向一个目标写数据
 
@@ -1097,7 +1097,7 @@ public class CallableThreadTest implements Callable<Integer> {
 
 ## sleep(),wait()&yeild()
 
-![img](https://upload-images.jianshu.io/upload_images/66827-780462c52b8f5a83.png)
+![img](.\img\线程生命周期.png)
 
 ### sleep()
 
