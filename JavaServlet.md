@@ -592,6 +592,8 @@ public void doGet(HttpServletRequest request,HttpServletResponse response)
 
 
 
+
+
 #web.xml
 
 https://blog.csdn.net/m751075306/article/details/9452893
@@ -599,3 +601,249 @@ https://blog.csdn.net/m751075306/article/details/9452893
 https://blog.csdn.net/believejava/article/details/43229361
 
 https://www.jianshu.com/p/285ad45f60d1
+
+web.xml是web项目的配置文件，一般的web工程都会用到web.xml来配置，方便大型项目的开发
+web.xml主要用来配置Filter，Listener，Servlet等
+web.xml不是必须的
+
+web工程加载web.xml的过程：
+
+web容器加载的顺序为`ServletContext-->context-param-->listener-->filter-->servlet`
+这些元素可以在文件的任意位置，不会因为在文件中的顺序而影响加载顺序
+
+> - 启动一个web项目，web容器会读取它的配置文件web.xml，读取`<Listener>`和`context-param`两个结点
+> - 创建一个ServletContext（Servlet上下文），这个web项目的所有部分都共享这个上下文
+> - 容器将`<context-param>`转化为键值对，并交给ServletContext
+> - 容器创建`<listener>`中的类实例，创建监听器
+
+## web.xml元素
+
+### schema
+
+web.xml的schema（模式文件）是由Sun公司定义的
+每个web.xml文件的根元素`<web-app>`中都必须注明这个web.xml使用的是哪个模式文件
+其他元素都放在`<web-app>`中
+
+实例：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" 
+    xmlns="http://java.sun.com/xml/ns/j2ee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+        http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+</web-app>
+```
+
+### display-name
+
+`<display-name>`Web应用的名称
+
+用于标记这个特定的Web应用的名称
+
+```xml
+<display-name>Applet Name</display-name>
+```
+
+###discription
+
+`<discription>`应用描述
+
+```xml
+<discription>This is a Applet Description</discription>
+```
+
+### context-param
+
+`<context-param>`上下文参数
+
+声明应用范围内的初始化参数
+用于向Servlet+Context提供键值对，即应用上下文信息
+后续的Listener，Filter在初始化的时候也会用到这些上下文信息
+在Servlet里面可以通过`getServletContext().getInitParameter("context/param")`得到
+
+```xml
+<context-param>
+	<param-name>logConfiguration</param-name>
+    <param-value>/WEB-INF/log.xml</param-value>
+</context-param>
+```
+
+### filter
+
+filter可以认为是Servlet的加强版
+主要用于对用户的request进行预处理
+也可以对response进行后处理
+
+使用filter的完整流程是：
+
+> filter对用户的请求进行预处理
+> 然后将请求HttpServletRequest交给Servlet处理并生成响应
+> 最后Filter再对服务器响应HTTPServletResponse进行后处理
+
+Servlet与Servlet具有完全一样的生命周期
+而Filter也可以通过`<init-param>`进行初始化参数的配置，通过FilterConfig传给Filter
+
+Filter的配置就是将此项目与一个实现`javax.servlet.Filter`接口的类相关联：
+
+```xml
+<filter>
+	<filter-name>setCharacterEncoding</filter-name>
+    <filter-class>com.test.setCharacterEncodingFilter</filter-class>
+    <init-param>
+    	<param-name>encoding</param-name>
+        <param-value>utf-8</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+	<filter-name>setCharacterEncoding</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+### listener
+
+`<listener>`监听器
+
+```xml
+<listener>
+	<listener-class>con.listener.SessionListener</listener-class>
+</listener>
+```
+
+### servlet
+
+`<servlet>`运行在服务器端的小程序
+
+```xml
+<!-- 基本配置 -->
+<servlet>
+	<servlet-name>snoop</servlet-name>
+    <servlet-class>SnoopServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>snoop</servlet-name>
+    <url-pattern>/snoop</url-pattern>
+</servlet-mapping>
+```
+
+```xml
+<!-- 高级配置 -->
+<servlet>
+	<servlet-name>snoop</servlet-name>
+    <servlet-class>SnoopServlet</servlet-class>
+    <init-param>
+    	<param-name>foo</param-name>
+        <param-value>bar</param-value>
+    </init-param>
+    <run-as>
+    	<description>Security role for anonymous access</description>
+        <role-name>tomcat</role-name>
+    </run-as>
+</servlet>
+<servlet-mapping>
+	<servlet-name>snoop</servlet-name>
+    <url-pattern>/snoop</url-pattern>
+</servlet-mapping>
+```
+
+含义：
+
+`<servlet-name></servlet-name> `
+指定servlet的名称
+
+`<servlet-class></servlet-class> `
+指定servlet的类名称
+
+`<jsp-file></jsp-file> `
+指定web站台中的某个JSP网页的完整路径
+
+`<init-param></init-param> `
+用来定义参数，可有多个init-param。
+在servlet类中通过getInitParamenter(String name)方法访问初始化参数
+
+`<load-on-startup></load-on-startup>`
+指定当Web应用启动时，装载Servlet的次序。
+当值为正数或零时：Servlet容器先加载数值小的servlet，再依次加载其他数值大的servlet。
+当值为负或未定义：Servlet容器将在Web客户首次访问这个servlet时加载它。
+
+`<servlet-mapping></servlet-mapping> `
+用来定义servlet所对应的URL，包含两个子元素
+
+`<servlet-name></servlet-name> `
+指定servlet的名称
+
+`<url-pattern></url-pattern> `
+指定servlet所对应的URL
+
+### session-config
+
+`<session-config>`会话超时配置
+
+```xml
+<session-config>
+	<session-timeout>120</session-timeout>
+</session-config>
+```
+
+单位为min
+
+### welcome-file-list
+
+`<welcome-file-list>`欢迎文件页
+
+```xml
+<welcome-file-list>
+	<welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+</welcome-file-list>
+```
+
+显示时按照顺序从第一个找起
+如果第一个存在，就显示第一个，后面的不起作用
+如果第一个不存在，就找第二个，以此类推
+
+### jsp-config
+
+`<jsp-config>`设置jsp
+
+`<jsp-config>`包括`<taglib>`和`<jsp-property-group>`两个子元素
+
+`<jsp-property-group>`元素主要有八个子元素
+它们分别是：
+
+| 元素 | 作用 |
+| ---- | ---- |
+|`<description>`|设定的说明 |
+|`<display-name>`|设定名称 |
+|`<url-pattern>`|设定值所影响的范围，如： /CH2 或 /*.jsp|
+|`<el-ignored>`|若为 true，表示不支持 EL 语法 |
+|`<scripting-invalid>`|若为 true，表示不支持 <% scripting %>语法 |
+|`<page-encoding>`|设定 JSP 网页的编码 |
+|`<include-prelude>`|设置 JSP 网页的抬头，扩展名为 .jspf|
+|`<include-coda>`|设置 JSP 网页的结尾，扩展名为 .jspf|
+
+示例：
+
+```
+<jsp-config>
+    <taglib>
+        <taglib-uri>Taglib</taglib-uri>
+        <taglib-location>/WEB-INF/tlds/MyTaglib.tld</taglib-location>
+    </taglib>
+    <jsp-property-group>
+        <description>Special property group for JSP Configuration JSP example.</description>
+        <display-name>JSPConfiguration</display-name>
+        <url-pattern>/jsp/* </url-pattern>
+        <el-ignored>true</el-ignored>
+        <page-encoding>GB2312</page-encoding>
+        <scripting-invalid>true</scripting-invalid>
+        <include-prelude>/include/prelude.jspf</include-prelude>
+        <include-coda>/include/coda.jspf</include-coda>
+    </jsp-property-group>
+</jsp-config>
+```
+
+对于Web 应用程式来说，Scriptlet 是个不乐意被见到的东西，因为它会使得HTML 与Java 程式码交相混杂，对于程式的维护来说相当的麻烦，必要的时候，可以在web.xml 中加上`<scripting-invalid>` 标签，设定所有的JSP 网页都不可以使用Scriptlet。
